@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include "questions.h"
 
 void print_question(Question question, const unsigned short question_number, const double score);
