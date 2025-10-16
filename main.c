@@ -16,16 +16,6 @@ int main(void) {
         exit(EXIT_FAILURE);
     }
 
-    questions.answer = 'a';
-    strcpy(questions.options[0], "Opção A");
-    strcpy(questions.options[1], "Opção B");
-    strcpy(questions.options[2], "Opção C");
-    strcpy(questions.options[3], "Opção D");
-    strcpy(questions.question, "Qual é a capital do Brasil?");
-    questions.question_level = 1;
-
-    print_question(questions, 1, 0);
-
     return EXIT_SUCCESS;
 }
 
