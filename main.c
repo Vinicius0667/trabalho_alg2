@@ -1,12 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include "questions.h"
+#include "random_questions.h"
 
 void print_question(Question question, const unsigned short question_number, const double score);
 
 int main(void) {
     Question questions;
     FILE *file;
+    srand(time(NULL));
 
     file = fopen("perguntas.dat", "rb");
 
