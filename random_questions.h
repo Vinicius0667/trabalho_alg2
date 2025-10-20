@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-char get_weighted_option(char correct_question, int prob);
+char get_weighted_option(char correct_question, int probability, char *wrong_options, int number_options);
+int get_random_number(int min, int max);
 
 #endif
