@@ -5,7 +5,7 @@
 #include "random_questions.h"
 #include "embaralhar.h"
 
-void print_question(Question question, const unsigned short question_number, const double score);
+void print_question(Question question, const unsigned short question_number);
 
 int main(void) {
     Question *questions = NULL;
@@ -13,8 +13,8 @@ int main(void) {
     srand(time(NULL));
     double premio_total = 0.0;
     int recurso_plateia = 3, recurso_pular = 3, recurso_carta = 3, recurso_universitarios = 3;
-    int nivel_atual = 1, numeracao_pergunta = 1;
-    int eliminado = 0, venceu = 0;
+    int nivel_dificuldade = 1, numeracao_pergunta = 1;
+    int loser = 0, winner = 0;
 
     file = fopen("perguntas.dat", "rb");
 
@@ -27,22 +27,42 @@ int main(void) {
     read_questions(&questions, file, 70);
     fclose(file);
 
-    while(!eliminado && !venceu && nivel_atual <= 4){
-        //
+    printf("--------------------------\n");
+    printf("SEJA BEM VINDO AO SHOW DO MILHÀO!!!");
+    printf("--------------------------\n");
+
+    while(!loser && !winner && nivel_atual <= 4){
+
+        unsigned short question_number = (nivel_dificuldade == 4) ? 1 : 5;
+
+        print_question(*questions, question_number);
         //
     }
 
     return EXIT_SUCCESS;
 }
 
-void print_question(Question question, const unsigned short question_number, const double score) {
-    printf("== ------------\n");
-    printf("== Pergunta %hu\n", question_number);
-    printf("== Voce possui um total acumulado de R$ %.2lf ==\n", score);
-    printf("\n");
-    printf("%s\n", question.question);
+void print_question(Question question, const unsigned short question_number) {
+    short i;
+
+    printf("\nPergunta %hu\n", question_number);
+    printf("\n%s\n", question.question);
+
     for (short i = 0; i < 4; i++) {
         printf("%s\n", question.options[i]);
     }
-    printf("\n");
+
+    printf("\n--------------------------\n");
+
+    printf("\n--- Ajuda ---\n");
+    printf("[1] Pular pergunta (%dx)\n", recurso_pular);
+    printf("[2] Pedir ajuda a plateia (%dx)\n", recurso_plateia);
+    printf("[3] Pedir ajuda aos universitários (%dx)\n", recurso_universitarios);
+    printf("[4] Pedir ajuda as cartas (%dx)\n", recurso_carta);
+    printf("[5] Parar\n");
+    printf("--------------------------\n");
+
+    printf("Entre com a sua opção [a-d] para responder ou [1-5] para receber ajuda: ");
 }
+
+// printf("\n== Voce possui um total acumulado de R$ %.2lf ==\n", score);
