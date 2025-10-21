@@ -43,5 +43,5 @@ void free_questions(Question **questions) {
  * @param unsigned short position Posição a ser incrementada.
  */
 void increases_position_file(FILE *file, const unsigned short position) {
-    fseek(file, SEEK_CUR, position * sizeof(Question));
+    fseek(file, position * sizeof(Question), SEEK_SET);
 }
