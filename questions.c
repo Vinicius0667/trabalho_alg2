@@ -8,7 +8,9 @@
  * @param FILE *file Ponteiro para o arquivo.
  * @param unsigned short questions_to_read Número de questões a serem lidas.
  */
-void read_questions(Question **questions, FILE *file, const unsigned short questions_to_read) {
+void read_questions(Question **questions, FILE *file, const unsigned short start_position, const unsigned short questions_to_read) {
+    fseek(file, start_position * sizeof(Question), SEEK_SET);
+    
     fread(*questions, sizeof(Question), questions_to_read, file);
 }
 
@@ -40,8 +42,7 @@ void free_questions(Question **questions) {
  * Incrementa a posição do arquivo.
  *
  * @param FILE *file Ponteiro para o arquivo.
- * @param unsigned short position Posição a ser incrementada.
+ * param unsigned short position Posição a ser incrementada.
  */
-void increases_position_file(FILE *file, const unsigned short position) {
-    fseek(file, position * sizeof(Question), SEEK_SET);
-}
+// void seek_question_position(FILE *file, const unsigned short position) {
+// }

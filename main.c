@@ -3,9 +3,9 @@
 #include <time.h>
 #include "questions.h"
 #include "random_questions.h"
-#include "embaralhar.h"
+#include "embaralhar.c"
 
-void print_question(Question question, const unsigned short question_number);
+void print_question(Question question, const unsigned short question_number, int recurso_plateia, int recurso_pular, int recurso_carta, int recurso_universitarios);
 
 int main(void) {
     Question *questions = NULL;
@@ -23,31 +23,33 @@ int main(void) {
         exit(EXIT_FAILURE);
     }
 
-    alloc_questions(&questions, 70);
-    read_questions(&questions, file, 70);
-    fclose(file);
+    unsigned short questions_by_level = (nivel_dificuldade == 4) ? 10 : 20;
+    unsigned short start_pos = (nivel_dificuldade - 1) * 20;
 
+    alloc_questions(&questions, questions_by_level);
+    read_questions(&questions, file, start_pos, questions_by_level);
+    
     printf("--------------------------\n");
     printf("SEJA BEM VINDO AO SHOW DO MILHÀO!!!");
     printf("--------------------------\n");
 
-    while(!loser && !winner && nivel_atual <= 4){
+    while(!loser && !winner && nivel_dificuldade <= 4){
 
         unsigned short question_number = (nivel_dificuldade == 4) ? 1 : 5;
 
-        print_question(*questions, question_number);
+        print_question(*questions, question_number, recurso_plateia, recurso_pular, recurso_carta, recurso_universitarios);
         //
     }
-
+    
+    fclose(file);
     return EXIT_SUCCESS;
 }
 
-void print_question(Question question, const unsigned short question_number) {
-    short i;
+void print_question(Question question, const unsigned short question_number, int recurso_plateia, int recurso_pular, int recurso_carta, int recurso_universitarios) {
 
-    printf("\nPergunta %hu\n", question_number);
+    printf("\nPergunta %hu\n", question_number); // Question_number vai ser aumentado na main, de 1 - 5
     printf("\n%s\n", question.question);
-
+    
     for (short i = 0; i < 4; i++) {
         printf("%s\n", question.options[i]);
     }

@@ -11,9 +11,9 @@ typedef struct {
     char answer;
 } Question;
 
-void read_questions(Question **questions, FILE *file, const unsigned short questions_to_read);
-void alloc_questions(Question **questions, const unsigned short questions_number);
+void read_questions(Question **questions, FILE *file, const unsigned short start_position, const unsigned short questions_to_read);
+void alloc_questions(Question **questions, const unsigned short questions_to_alloc);
 void free_questions(Question **questions);
-void increases_position_file(FILE *file, const unsigned short position);
+// void seek_question_position(FILE *file, const unsigned short position);
 
 #endif
