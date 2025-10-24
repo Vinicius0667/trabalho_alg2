@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "*.embeddedhtml": "html",
+        "embaralhar.h": "c",
+        "random_questions.h": "c"
+    }
+}
