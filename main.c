@@ -3,7 +3,7 @@
 #include <string.h>
 #include <time.h>
 #include "questions.h"
-// #include "random_questions.h"
+#include "random_questions.h"
 // #include "embaralhar.h"
 
 void print_question(Question question, const unsigned short question_number, int recurso_plateia, int recurso_pular, int recurso_carta, int recurso_universitarios);
@@ -30,40 +30,58 @@ int main(void) {
     printf("\n------------------------------------------------------------------------------------------------------------------------------\n");
 
     
-    // unsigned short max_question = (nivel_dificuldade == 4) ? 1 : 5;
-    unsigned short question_number = 1;
+    // unsigned short question_number = 1;
+    // question_number = (question_number > 5) ? 1 : question_number;
     
     while(!loser && !winner && nivel_dificuldade <= 4){
         unsigned short questions_by_level = (nivel_dificuldade == 4) ? 10 : 20;
+
+        unsigned short question_number = (nivel_dificuldade == 4) ? 1 : 5;
         unsigned short start_pos = (nivel_dificuldade - 1) * 20;
-        
-        alloc_questions(&questions, questions_by_level);
-        read_questions(&questions, file, start_pos, questions_by_level);
+        unsigned short nivel_atual = nivel_dificuldade;
 
-        question_number = (question_number > 5) ? 1 : question_number;
-
-        print_question(*questions, question_number, recurso_plateia, recurso_pular, recurso_carta, recurso_universitarios);
-        
-        scanf(" %c", &answer);
-        // printf("%c", answer);
-        
-        if (answer == questions->answer){
-            printf("\nVocê acertou!!!\n");
-            question_number += 1;
-        } else {
-            printf("\nVocê perdeu tudo!!! : ( \n");
-            break;
+        if (questions != NULL){
+            free_questions(&questions);
         }
+
+        alloc_questions(&questions, questions_by_level);
+
+        unsigned short count = 1;
+        while (nivel_atual == nivel_dificuldade ||  !loser){
+            read_questions(&questions, file, start_pos, questions_by_level);
+
+            unsigned short random_number = get_random_number(0,questions_by_level);
+            Question *atual_question = &questions[random_number];
+            
+            print_question(*atual_question, count, recurso_plateia, recurso_pular, recurso_carta, recurso_universitarios);
+            scanf(" %c", &answer);
+
+            if (answer == atual_question->answer){
+                printf("\nVocê acertou!!!\n");
+                count += 1;
+            } else {
+                printf("\nVocê perdeu tudo!!! : (\n");
+                loser = 1;
+                break;
+            }
+
+            if (count > question_number){
+                nivel_atual += 1;
+            }
+        }
+
+        nivel_dificuldade ++;
+        
     }
     
     fclose(file);
     return EXIT_SUCCESS;
 }
 
-void print_question(Question question, const unsigned short question_number, int recurso_plateia, int recurso_pular, int recurso_carta, int recurso_universitarios) {
+void print_question(Question question, const unsigned short count, int recurso_plateia, int recurso_pular, int recurso_carta, int recurso_universitarios) {
 
     
-    printf("\nPergunta %hu\n", question_number); // Question_number vai ser aumentado na main, de 1 - 5
+    printf("\nPergunta %hu\n", count); // count vai ser aumentado na main, de 1 - 5
     printf("\n%s\n", question.question);
     
     printf("\na) %s\n", question.options[0]);

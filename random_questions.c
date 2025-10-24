@@ -24,10 +24,10 @@ char get_weighted_option(char correct_question, int probability, char *wrong_opt
 /**
  * Retorna um número aleatório entre min e max.
  *
- * @param int min O valor mínimo.
- * @param int max O valor máximo.
+ * @param unsigned min O valor mínimo.
+ * @param unsigned max O valor máximo.
  * @return int O número aleatório.
  */
-int get_random_number(int min, int max) {
+int get_random_number(unsigned short min, unsigned short max) {
     return rand() % (max - min + 1) + min;
 }
