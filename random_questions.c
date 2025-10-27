@@ -28,6 +28,21 @@ char get_weighted_option(char correct_question, int probability, char *wrong_opt
  * @param unsigned max O valor máximo.
  * @return int O número aleatório.
  */
-int get_random_number(unsigned short min, unsigned short max) {
-    return rand() % (max - min + 1) + min;
+int get_random_number(unsigned short min, unsigned short max, int *numbers_sorted) {
+    int random_number = 0;
+    random_number = rand() % (max - min + 1) + min;
+
+    for (int i = 0; i < 8; i++){
+        if (random_number == *(numbers_sorted[i]) && *(numbers_sorted[i]) != NULL) {
+            random_number =  get_random_number(0, max, *numbers_sorted);
+        }
+    }
+    for (int i = 0; i < 8; i++){
+        if (*(numbers_sorted[i]) == NULL) {
+            
+            numbers_sorted[i] = random_number;
+            return random_number;
+        }
+    }
+    
 }

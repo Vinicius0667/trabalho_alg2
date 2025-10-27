@@ -18,7 +18,8 @@ int main(void) {
     double premio_total = 0.0;
     char answer;
     int recurso_plateia = 3, recurso_pular = 3, recurso_carta = 3, recurso_universitarios = 3;
-    unsigned short nivel_dificuldade = 1;
+    int nivel_dificuldade = 1, *numbers_sorted = NULL;
+    
     int loser = 0, winner = 0;
 
     file = fopen("perguntas.dat", "rb");
@@ -40,16 +41,24 @@ int main(void) {
         unsigned short start_pos = (nivel_dificuldade - 1) * 20;
 
         if (questions != NULL) free_questions(&questions);
+        
+        if (numbers_sorted != NULL) free(*numbers_sorted);
+        *numbers_sorted = (int *) malloc(sizeof(int) * 8);
+        if (*numbers_sorted == NULL) {
+            perror("Houve um erro ao alocar memória");
+            exit(EXIT_FAILURE);
+        }
+
         alloc_questions(&questions, questions_by_level);
 
         if (nivel_dificuldade == 2) premio_total = 10000;
         if (nivel_dificuldade == 3) premio_total = 100000;
-
-        while (!loser) {
-
+        
+        while (!loser){
             read_questions(&questions, file, start_pos, questions_by_level);
 
-            unsigned short random_number = get_random_number(0, questions_by_level - 1);
+            unsigned short random_number = get_random_number(0 ,questions_by_level - 1, numbers_sorted);
+
             Question *atual_question = &questions[random_number];
 
             print_question(*atual_question, acertos, recurso_plateia, recurso_pular, recurso_carta, recurso_universitarios, premio_total);
