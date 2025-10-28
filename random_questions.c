@@ -22,23 +22,26 @@ char get_weighted_option(char correct_question, int probability, char *wrong_opt
 }
 
 /**
- * Retorna um número aleatório entre min e max.
+ * Retorna um número aleatório entre min e max que não esteja no array number_sorted.
  *
  * @param unsigned min O valor mínimo.
  * @param unsigned max O valor máximo.
- * @return int O número aleatório.
+ * @param unsigned questions_number Quantidade de perguntas no nível atual.
+ * @param int *numbers_sorted Array para controlar números já sorteados.
+ * @return int O número aleatório não repetido.
  */
 int get_random_number(unsigned short min, unsigned short max, int *numbers_sorted, unsigned short question_number) {
-    int random_number = 0 , i = 0, repeted;
+    int random_number, i;
+    int repeted;
 
     for (i = 0; i < (question_number + 3); i++){ // zera vetor
         numbers_sorted[i] = -1;
     }
 
-    while (!repeted){
+    while (1) {
         repeted = 0;
-
         random_number = rand() % (max - min + 1) + min;
+
         for (i = 0; i < (question_number + 3); i++) {
             if (random_number == numbers_sorted[i]) {
                 repeted = 1;

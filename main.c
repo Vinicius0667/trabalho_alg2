@@ -43,7 +43,7 @@ int main(void) {
         if (questions != NULL) free_questions(&questions);
         
         if (numbers_sorted != NULL) free(*numbers_sorted);
-        *numbers_sorted = (int *) malloc(sizeof(int) * 8);
+        *numbers_sorted = (int *) malloc(sizeof(int) * (question_number + recurso_pular));
         if (*numbers_sorted == NULL) {
             perror("Houve um erro ao alocar memória");
             exit(EXIT_FAILURE);
