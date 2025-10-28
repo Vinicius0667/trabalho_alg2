@@ -28,21 +28,32 @@ char get_weighted_option(char correct_question, int probability, char *wrong_opt
  * @param unsigned max O valor máximo.
  * @return int O número aleatório.
  */
-int get_random_number(unsigned short min, unsigned short max, int *numbers_sorted) {
-    int random_number = 0;
-    random_number = rand() % (max - min + 1) + min;
+int get_random_number(unsigned short min, unsigned short max, int *numbers_sorted, unsigned short question_number) {
+    int random_number = 0 , i = 0, repeted;
 
-    for (int i = 0; i < 8; i++){
-        if (random_number == *(numbers_sorted[i]) && *(numbers_sorted[i]) != NULL) {
-            random_number =  get_random_number(0, max, *numbers_sorted);
-        }
+    for (i = 0; i < (question_number + 3); i++){ // zera vetor
+        numbers_sorted[i] = -1;
     }
-    for (int i = 0; i < 8; i++){
-        if (*(numbers_sorted[i]) == NULL) {
-            
-            numbers_sorted[i] = random_number;
+
+    while (!repeted){
+        repeted = 0;
+
+        random_number = rand() % (max - min + 1) + min;
+        for (i = 0; i < (question_number + 3); i++) {
+            if (random_number == numbers_sorted[i]) {
+                repeted = 1;
+                break;
+            }
+        }
+        
+        if (!repeted) {
+            for (i = 0; i < (question_number + 3); i++) {
+                if (numbers_sorted[i] == -1){
+                    numbers_sorted[i] = random_number;
+                    break;
+                }
+            }
             return random_number;
         }
     }
-    
 }
