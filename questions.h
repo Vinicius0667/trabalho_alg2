@@ -14,6 +14,5 @@ typedef struct {
 void read_questions(Question **questions, FILE *file, const unsigned short questions_to_read);
 void alloc_questions(Question **questions, const unsigned short questions_number);
 void free_questions(Question **questions);
-void increases_position_file(FILE *file, const unsigned short position);
 
 #endif

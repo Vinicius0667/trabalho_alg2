@@ -8,8 +8,8 @@ outros assuntos.
 
 Para executar o programa, pode-se utilizar o seguinte comando:
 
-__Linux:__ `gcc *.c -o main && ./main`<br/>
-__Windows:__ `gcc *.c -o main.exe && main.exe`
+__Linux:__ `gcc *.c -o main -lm && ./main`<br/>
+__Windows:__ `gcc *.c -o main.exe -lm && main.exe`
 
 ## Comandos básicos de Git
 

@@ -33,15 +33,8 @@ void alloc_questions(Question **questions, const unsigned short questions_number
  * @param Question **questions Ponteiro para o vetor de questões.
  */
 void free_questions(Question **questions) {
-    free(*questions);
-}
-
-/**
- * Incrementa a posição do arquivo.
- *
- * @param FILE *file Ponteiro para o arquivo.
- * @param unsigned short position Posição a ser incrementada.
- */
-void increases_position_file(FILE *file, const unsigned short position) {
-    fseek(file, SEEK_CUR, position * sizeof(Question));
+    if (*questions != NULL) {
+        free(*questions);
+        *questions = NULL;
+    }
 }
