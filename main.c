@@ -72,7 +72,6 @@ int main(void) {
                     response_flux_control(questions, &user_answer, helps, &question_drawn, random_options, &lose);
 
                     if ((user_answer - '0') == 5) {
-                        lose = 0;
                         printf("\nParabéns, seu premio foi de R$ %.2lf\n\n", total_prize);
                         return EXIT_SUCCESS;
                     }
@@ -160,7 +159,7 @@ void response_flux_control (
         helps[*user_answer - 1]--;
 
         if ((*user_answer - '0') == 1 && helps[0] > 0) {
-            lose = 0;
+            *lose = 0;
             printf("Questao pulada\n");
             helps[0]--;
         } else if ((*user_answer - '0') == 2 && helps[1] > 0) {
