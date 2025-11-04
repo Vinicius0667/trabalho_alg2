@@ -54,7 +54,6 @@ int main(void) {
             read_questions(&questions, file, MAX_QUESTIONS);
 
             while (hits < HITS && !lose) {
-                lose = 1;
                 question_drawn = get_random_number(0, MAX_QUESTIONS - 1);
 
                 for (i = 0; i < counter; i++) {
@@ -65,6 +64,7 @@ int main(void) {
                 }
 
                 if (question_drawn != -1) {
+                    lose = 1;
                     used_questions[level - 1][counter] = question_drawn;
                     print_question(*(questions + question_drawn), counter + 1, total_prize);
                     print_helps(helps);
@@ -95,7 +95,6 @@ int main(void) {
             read_questions(&questions, file, (size_t) MAX_QUESTIONS / 2);
 
             while (!lose) {
-                lose = 1;
                 question_drawn = get_random_number(0, (int) (MAX_QUESTIONS / 2) - 1);
                 for (i = 0; i < counter; i++) {
                     if (used_questions[level - 1][i] == question_drawn) {
@@ -105,6 +104,7 @@ int main(void) {
                 }
 
                 if (question_drawn != -1) {
+                    lose = 1;
                     used_questions[level - 1][counter] = question_drawn;
                     print_question(*(questions + question_drawn), counter + 1, total_prize);
                     print_helps(helps);
