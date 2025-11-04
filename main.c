@@ -1,3 +1,4 @@
+// Lara Eridan Genes Santiago, Pedro Henrique Urbieta e Vinícius da Silva Mascarenhas
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -122,8 +123,6 @@ int main(void) {
                         return EXIT_SUCCESS;
                     }
 
-                    total_prize = 0;
-
                     for (i = 0; i < 4; i++) {
                         random_options[i] = 0;
                     }
@@ -132,6 +131,7 @@ int main(void) {
             }
         }
         free_questions(&questions);
+        total_prize = 0;
         hits = 0;
         counter = 0;
         level++;
