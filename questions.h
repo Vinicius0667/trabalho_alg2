@@ -11,8 +11,8 @@ typedef struct {
     char answer;
 } Question;
 
-void read_questions(Question **questions, FILE *file, const unsigned short questions_to_read);
-void alloc_questions(Question **questions, const unsigned short questions_number);
+void read_questions(Question **questions, FILE *file, const size_t questions_to_read);
+void alloc_questions(Question **questions, const size_t questions_number);
 void free_questions(Question **questions);
 
 #endif

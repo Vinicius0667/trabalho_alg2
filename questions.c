@@ -8,7 +8,7 @@
  * @param FILE *file Ponteiro para o arquivo.
  * @param unsigned short questions_to_read Número de questões a serem lidas.
  */
-void read_questions(Question **questions, FILE *file, const unsigned short questions_to_read) {
+void read_questions(Question **questions, FILE *file, size_t questions_to_read) {
     fread(*questions, sizeof(Question), questions_to_read, file);
 }
 
@@ -18,7 +18,7 @@ void read_questions(Question **questions, FILE *file, const unsigned short quest
  * @param Question **questions Ponteiro para o vetor de questões.
  * @param unsigned short questions_number Número de questões a serem alocadas.
  */
-void alloc_questions(Question **questions, const unsigned short questions_number) {
+void alloc_questions(Question **questions, size_t questions_number) {
     *questions = (Question *) malloc(sizeof(Question) * questions_number);
 
     if (*questions == NULL) {
