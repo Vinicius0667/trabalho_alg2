@@ -7,7 +7,7 @@
 
 #define MAX_LEVEL 4
 #define MAX_QUESTIONS 20
-#define HITS 1
+#define HITS 5
 
 void print_question(Question question, const unsigned short question_number, const double score);
 void print_helps(const unsigned short *helps);
@@ -26,13 +26,14 @@ void response_flux_control (
     char *user_answer,
     unsigned short *helps,
     int *question_drawn,
-    unsigned short *random_options
+    unsigned short *random_options,
+    unsigned short *lose
 );
 
 int main(void) {
     Question *questions;
     FILE *file;
-    unsigned short level = 4, counter = 0, i, lose = 0, hits = 0;
+    unsigned short level = 1, counter = 0, i, lose = 0, hits = 0;
     unsigned short helps[4] = {3, 3, 3, 3}, used_questions[4][20] = {0}, random_options[4] = {0};
     double total_prize = 0;
     int question_drawn;
@@ -51,7 +52,8 @@ int main(void) {
             alloc_questions(&questions, MAX_QUESTIONS);
             read_questions(&questions, file, MAX_QUESTIONS);
 
-            while (hits < HITS) {
+            while (hits < HITS && !lose) {
+                lose = 1;
                 question_drawn = get_random_number(0, MAX_QUESTIONS - 1);
 
                 for (i = 0; i < counter; i++) {
@@ -67,19 +69,19 @@ int main(void) {
                     print_helps(helps);
                     scanf("%c%*c", &user_answer);
 
-                    response_flux_control(questions, &user_answer, helps, &question_drawn, random_options);
+                    response_flux_control(questions, &user_answer, helps, &question_drawn, random_options, &lose);
 
-                    if (user_answer == (questions + question_drawn)->answer) {
-                        hits++;
-                        total_prize += pow(10, level + 2);
-                    } else {
-                        lose = 1;
-                        total_prize = 0;
-                    }
-
-                    if ((user_answer - '0') == 5 || lose) {
+                    if ((user_answer - '0') == 5) {
+                        lose = 0;
                         printf("\nParabéns, seu premio foi de R$ %.2lf\n\n", total_prize);
                         return EXIT_SUCCESS;
+                    }
+
+                    if (user_answer == (questions + question_drawn)->answer) {
+                        printf("Certa resposta!\n");
+                        lose = 0;
+                        hits++;
+                        total_prize += pow(10, level + 2);
                     }
 
                     for (i = 0; i < 4; i++) {
@@ -88,16 +90,12 @@ int main(void) {
                     counter++;
                 }
             }
-            total_prize = pow(10, level + 3);
         } else {
-            total_prize = 600000;
-
             alloc_questions(&questions, (size_t) MAX_QUESTIONS / 2);
-            fseek(file, 60 * sizeof(Question), SEEK_SET);
             read_questions(&questions, file, (size_t) MAX_QUESTIONS / 2);
 
             while (!lose) {
-                printf("Questao nivel: %d\n", questions->question_level);
+                lose = 1;
                 question_drawn = get_random_number(0, (int) (MAX_QUESTIONS / 2) - 1);
                 for (i = 0; i < counter; i++) {
                     if (used_questions[level - 1][i] == question_drawn) {
@@ -112,20 +110,19 @@ int main(void) {
                     print_helps(helps);
                     scanf("%c%*c", &user_answer);
 
-                    response_flux_control(questions, &user_answer, helps, &question_drawn, random_options);
+                    response_flux_control(questions, &user_answer, helps, &question_drawn, random_options, &lose);
+
+                    if ((user_answer - '0') == 5) {
+                        printf("\nParabens, seu premio foi de R$ %.2lf\n\n", total_prize);
+                        return EXIT_SUCCESS;
+                    }
 
                     if (user_answer == (questions + question_drawn)->answer) {
                         total_prize = pow(10, 6);
-                        printf("\nParabéns, seu premio foi de R$ %.2lf\n\n", total_prize);
+                        printf("\nParabens, seu premio foi de R$ %.2lf\n\n", total_prize);
                         return EXIT_SUCCESS;
                     }
 
-                    if ((user_answer - '0') == 5) {
-                        printf("\nParabéns, seu premio foi de R$ %.2lf\n\n", total_prize);
-                        return EXIT_SUCCESS;
-                    }
-
-                    lose = 1;
                     total_prize = 0;
 
                     for (i = 0; i < 4; i++) {
@@ -139,10 +136,12 @@ int main(void) {
         hits = 0;
         counter = 0;
         level++;
+        if (level < MAX_LEVEL && !lose)
+            total_prize = pow(10, level + 2);
     }
 
     fclose(file);
-    printf("Infelizmente, você perdeu, obrigado por jogar!!!\n");
+    printf("Infelizmente, voce perdeu, obrigado por jogar!!!\n");
     printf("Seu premio foi de R$ %.2lf\n", total_prize);
     return EXIT_SUCCESS;
 }
@@ -152,7 +151,8 @@ void response_flux_control (
     char *user_answer,
     unsigned short *helps,
     int *question_drawn,
-    unsigned short *random_options
+    unsigned short *random_options,
+    unsigned short *lose
 ) {
     char wrong_answers[3];
     unsigned short random_card, random_number;
@@ -160,10 +160,10 @@ void response_flux_control (
         helps[*user_answer - 1]--;
 
         if ((*user_answer - '0') == 1 && helps[0] > 0) {
+            lose = 0;
             printf("Questao pulada\n");
             helps[0]--;
         } else if ((*user_answer - '0') == 2 && helps[1] > 0) {
-            printf("Dentro da plateia\n");
             get_help(questions, *question_drawn, wrong_answers, 40, random_options, 30, user_answer);
             helps[1]--;
         } else if ((*user_answer - '0') == 3 && helps[2] > 0) {
@@ -174,6 +174,8 @@ void response_flux_control (
             random_card = get_random_number(0, 3);
 
             random_options[(questions + *question_drawn)->answer - 'a'] = 1;
+
+           printf("A carta selecionada elimina %hu questoes\n", random_card);
 
             while (random_card > 0) {
                 random_number = get_random_number(0, 3);
@@ -207,7 +209,7 @@ void print_helps(const unsigned short *helps) {
     printf("[1] Pular pergunta (%hux)\n", helps[0]);
     printf("[2] Pedir ajuda a plateia (%hux)\n", helps[1]);
     printf("[3] Pedir ajuda aos universitarios (%hux)\n", helps[2]);
-    printf("[4] Pedir ajuda as cartas (%hx)\n", helps[3]);
+    printf("[4] Pedir ajuda as cartas (%hux)\n", helps[3]);
     printf("[5] Parar\n");
 }
 
@@ -221,9 +223,6 @@ void get_wrong_answer(char correct_answer, char *wrong_answers) {
                 idx++;
             }
         }
-    }
-    for (int i = 0; i < 3; i++) {
-        printf("%c)\n", wrong_answers[i]);
     }
 }
 
@@ -239,11 +238,6 @@ void get_help(Question *questions,
     short j;
 
     get_wrong_answer((questions + question_index)->answer, wrong_answers);
-
-    for (int i = 0; i < 4; i++) {
-        printf("%c", wrong_answers[i]);
-    }
-
     for (j = 0; j < option_number; j++) {
         random_option = get_weighted_option((questions + question_index)->answer, probability, wrong_answers, 3);
         random_options[random_option - 'a']++;

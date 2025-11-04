@@ -18,9 +18,7 @@ char get_weighted_option(char correct_question, int probability, char *wrong_opt
         return correct_question;
     }
 
-    int position = rand() % number_options;
-
-    return wrong_options[position];
+    return wrong_options[rand() % number_options];
 }
 
 /**
